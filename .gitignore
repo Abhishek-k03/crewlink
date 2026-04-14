@@ -1,0 +1,34 @@
+node_modules
+dist
+dist-ssr
+coverage
+*.local
+
+.env
+.env.*
+!.env.example
+
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+
+*.log
+npm-debug.log*
+
+# ---------------------------------------------------------------------------
+# ASP.NET Core backend (server/)
+# ---------------------------------------------------------------------------
+[Bb]in/
+[Oo]bj/
+*.user
+
+# SQLite databases are generated on first run and reseed themselves; committing
+# one would ship a snapshot that goes stale against the migrations beside it.
+*.db
+*.db-shm
+*.db-wal
+
+
+LEARNING_LOG.md
