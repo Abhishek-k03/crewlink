@@ -1,0 +1,77 @@
+@host = http://localhost:5180
+
+### Sign in as Fleet Manager (full access)
+# @name login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "manager@crewlink.dev", "password": "manager123" }
+
+### Sign in as Crew Member (own records only)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "crew@crewlink.dev", "password": "crew123" }
+
+@token = {{login.response.body.token}}
+
+### The fleet
+GET {{host}}/api/vessels?pageSize=5&sort=name
+Authorization: Bearer {{token}}
+
+### Vessel names only - readable by any signed-in user, unlike the register above
+GET {{host}}/api/vessels/lookup
+Authorization: Bearer {{token}}
+
+### Crew directory, filtered and searched server-side
+GET {{host}}/api/crew?search=Santos&status=Onboard&pageSize=5
+Authorization: Bearer {{token}}
+
+### Certificates expiring within 30 days - the band is a SQL range scan, not a per-row computation
+GET {{host}}/api/certifications?bucket=Within 30 days&pageSize=5
+Authorization: Bearer {{token}}
+
+### Dashboard KPIs and chart series
+GET {{host}}/api/dashboard
+Authorization: Bearer {{token}}
+
+### Derived notifications
+GET {{host}}/api/notifications
+Authorization: Bearer {{token}}
+
+### Rule 2: expect 422 with the per-rank shortfall when the vessel is below manning
+PATCH {{host}}/api/vessels/vessel-0001
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "readyToSail": true }
+
+### Validation: expect 400 with fieldErrors.imoNumber (check digit is wrong)
+POST {{host}}/api/vessels
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "MV Bad Number",
+  "imoNumber": "1234568",
+  "flag": "Panama",
+  "type": "Tanker",
+  "status": "In Service",
+  "minimumSafeManning": { "Master": 1, "AB": 4 },
+  "readyToSail": false
+}
+
+### Rule 1: expect 422 listing the rotation that already covers those dates
+POST {{host}}/api/assignments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "crewId": "crew-demo-0001",
+  "vesselId": "vessel-0001",
+  "rankOnboard": "Chief Officer",
+  "signOnDate": "2026-08-01",
+  "signOffDate": "2026-10-01",
+  "port": "Singapore",
+  "status": "Planned"
+}

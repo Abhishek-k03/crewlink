@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CrewLink.Api.Tests/CrewLink.Api.Tests.csproj" />
+  <Project Path="CrewLink.Api/CrewLink.Api.csproj" />
+</Solution>
