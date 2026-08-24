@@ -1,7 +1,5 @@
 # CrewLink — Fleet Crew Rotation & Certification Management
 
-**Live demo:** _(add Vercel URL)_ | **Walkthrough video:** _(add Loom URL)_
-
 A crew management system for a small shipping fleet: 20 vessels, 1,200 seafarers, and the
 rotations and certificates that decide who is legally allowed to sail on what.
 
